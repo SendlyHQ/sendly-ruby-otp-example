@@ -1,3 +1,8 @@
+<p align="center">
+  <img src=".github/header.svg" alt="Sendly Ruby OTP Example" />
+</p>
+
+
 # Sendly Ruby Sinatra OTP Verification Example
 
 A complete phone number verification example using Sendly's OTP service with Ruby and Sinatra.
@@ -119,7 +124,7 @@ Verify an OTP code.
 
 ## Learn More
 
-- [Sendly Documentation](https://sendly.so/docs)
+- [Sendly Documentation](https://sendly.live/docs)
 - [Sendly Ruby SDK](https://github.com/sendly/sendly-ruby)
 - [Sinatra Documentation](http://sinatrarb.com/)
 
