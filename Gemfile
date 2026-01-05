@@ -1,0 +1,8 @@
+source 'https://rubygems.org'
+ruby '>= 3.0.0'
+gem 'sinatra', '~> 4.0'
+gem 'sinatra-contrib', '~> 4.0'
+gem 'sendly', '~> 3.0'
+gem 'dotenv', '~> 3.0'
+gem 'puma', '~> 6.0'
+gem 'rackup', '~> 2.0'

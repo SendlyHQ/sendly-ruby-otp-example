@@ -1,0 +1,79 @@
+<h1>Phone Verification</h1>
+<p class="subtitle">Enter your phone number to receive an OTP</p>
+
+<div id="message" class="message"></div>
+
+<form id="phoneForm">
+  <div class="form-group">
+    <label for="phone">Phone Number</label>
+    <input 
+      type="tel" 
+      id="phone" 
+      name="phone" 
+      placeholder="+1234567890" 
+      required
+      autocomplete="tel"
+    >
+  </div>
+  <button type="submit" id="submitBtn">
+    Send OTP
+  </button>
+</form>
+
+<script>
+  const form = document.getElementById('phoneForm');
+  const phoneInput = document.getElementById('phone');
+  const submitBtn = document.getElementById('submitBtn');
+  const messageDiv = document.getElementById('message');
+
+  function showMessage(text, type) {
+    messageDiv.textContent = text;
+    messageDiv.className = `message ${type} show`;
+  }
+
+  function hideMessage() {
+    messageDiv.className = 'message';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideMessage();
+
+    const phone = phoneInput.value.trim();
+
+    if (!phone) {
+      showMessage('Please enter a phone number', 'error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loader"></span>Sending...';
+
+    try {
+      const response = await fetch('/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phone }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showMessage(data.message, 'success');
+        setTimeout(() => {
+          window.location.href = `/verify?id=${data.id}`;
+        }, 1000);
+      } else {
+        showMessage(data.error || 'Failed to send OTP', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send OTP';
+      }
+    } catch (error) {
+      showMessage('Network error. Please try again.', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send OTP';
+    }
+  });
+</script>

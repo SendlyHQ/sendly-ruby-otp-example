@@ -1,0 +1,93 @@
+<h1>Verify OTP</h1>
+<p class="subtitle">Enter the code sent to your phone</p>
+
+<div id="message" class="message"></div>
+
+<form id="verifyForm">
+  <input type="hidden" id="verificationId" value="<%= @verification_id %>">
+  <div class="form-group">
+    <label for="code">OTP Code</label>
+    <input 
+      type="text" 
+      id="code" 
+      name="code" 
+      placeholder="Enter 6-digit code" 
+      required
+      maxlength="6"
+      pattern="\d{6}"
+      autocomplete="one-time-code"
+      inputmode="numeric"
+    >
+  </div>
+  <button type="submit" id="submitBtn">
+    Verify OTP
+  </button>
+</form>
+
+<a href="/" class="back-link">Back to phone entry</a>
+
+<script>
+  const form = document.getElementById('verifyForm');
+  const codeInput = document.getElementById('code');
+  const submitBtn = document.getElementById('submitBtn');
+  const messageDiv = document.getElementById('message');
+  const verificationId = document.getElementById('verificationId').value;
+
+  function showMessage(text, type) {
+    messageDiv.textContent = text;
+    messageDiv.className = `message ${type} show`;
+  }
+
+  function hideMessage() {
+    messageDiv.className = 'message';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideMessage();
+
+    const code = codeInput.value.trim();
+
+    if (!code || code.length !== 6) {
+      showMessage('Please enter a valid 6-digit code', 'error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loader"></span>Verifying...';
+
+    try {
+      const response = await fetch('/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          id: verificationId,
+          code 
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showMessage(data.message, 'success');
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      } else {
+        showMessage(data.error || 'Verification failed', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Verify OTP';
+        codeInput.value = '';
+        codeInput.focus();
+      }
+    } catch (error) {
+      showMessage('Network error. Please try again.', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Verify OTP';
+    }
+  });
+
+  codeInput.focus();
+</script>
