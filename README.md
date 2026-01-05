@@ -125,7 +125,7 @@ Verify an OTP code.
 ## Learn More
 
 - [Sendly Documentation](https://sendly.live/docs)
-- [Sendly Ruby SDK](https://github.com/sendly/sendly-ruby)
+- [Sendly Ruby SDK](https://github.com/SendlyHQ/sendly-ruby)
 - [Sinatra Documentation](http://sinatrarb.com/)
 
 ## License
